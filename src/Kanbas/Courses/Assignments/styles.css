@@ -1,7 +1,7 @@
 .wd-lesson {
     position: relative;
-    padding-left: 20px;
-    /* Adjust padding as necessary */
+    padding-left: 10px;
+
 }
 
 .wd-lesson::before {
@@ -11,7 +11,7 @@
     top: 0;
     bottom: 0;
     width: 4px;
-    /* Adjust the width of the border */
+
     background-color: green;
-    /* Green color for the border */
+
 }

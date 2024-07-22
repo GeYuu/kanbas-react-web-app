@@ -1,5 +1,14 @@
+import { useParams, Link } from "react-router-dom";
+import * as db from "../../../Database";
 
 export default function AssignmentEditor() {
+  const { cid, id } = useParams();
+  const assignment = db.assignments.find((a) => a._id === id);
+
+  if (!assignment) {
+    return <div>Assignment not found</div>;
+  }
+
   return (
     <div id="wd-assignments-editor">
       <div className="row">
@@ -9,28 +18,19 @@ export default function AssignmentEditor() {
           </label>
           <input
             id="wd-name"
-            value="A1"
+            defaultValue={assignment.title}
             className="form-control"
           />
         </div>
         <div className="mb-3">
-
           <textarea
             id="wd-description"
             className="form-control"
             rows={6}
+            defaultValue={assignment.description || "Description not available"}
           >
-            The assignment is available online. Submit a link to the landing page
-            of your Web application running on Netlify. The landing page should
-            include the following: Your full name and section Links to each of the
-            lab assignments Link to the Kanbas application Links to all relevant
-            source code repositories The Kanbas application should include a link
-            to navigate back to the landing page.
           </textarea>
         </div>
-
-
-
         <div className="col-3 mb-4">
           <label htmlFor="wd-points" className="form-label float-end">
             Points
@@ -38,12 +38,9 @@ export default function AssignmentEditor() {
         </div>
         <div className="col-9 mb-4">
           <div className="form-group d-flex">
-            <input id="wd-points" value={100} className="form-control" />
+            <input id="wd-points" defaultValue={assignment.points} className="form-control" />
           </div>
         </div>
-
-
-
         <div className="col-3 mb-4">
           <label htmlFor="wd-group" className="form-label float-end">
             Assignment Group
@@ -58,9 +55,6 @@ export default function AssignmentEditor() {
             </select>
           </div>
         </div>
-
-
-
         <div className="col-3 mb-4">
           <label htmlFor="wd-display-grade-as" className="form-label float-end">
             Display Grade as
@@ -75,8 +69,6 @@ export default function AssignmentEditor() {
             </select>
           </div>
         </div>
-
-
         <div className="col-3 mb-4">
           <label htmlFor="wd-submission-type" className="form-label float-end">
             Submission Type
@@ -146,15 +138,11 @@ export default function AssignmentEditor() {
             </div>
           </div>
         </div>
-
-
         <div className="col-3 mb-4">
           <label htmlFor="wd-submission-type" className="form-label float-end">
             Assign
           </label>
         </div>
-
-
         <div className="col-9 mb-4 border border-1 rounded-1">
           <div className="form-group mb-4">
             <label htmlFor="wd-assign-to" className="form-label mt-2">
@@ -162,60 +150,52 @@ export default function AssignmentEditor() {
             </label>
             <input
               id="wd-assign-to"
-              value="Everyone"
+              defaultValue="Everyone"
               className="form-control"
             />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="wd-due-date" className="form-label">
+              Due
+            </label>
+            <input
+              id="wd-due-date"
+              type="datetime-local"
+              defaultValue={assignment.dueDate}
+              className="form-control"
+            />
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <label htmlFor="wd-available-from" className="form-label">
+                Available from
+              </label>
+              <input
+                id="wd-available-from"
+                type="datetime-local"
+                defaultValue={assignment.availableFrom}
+                className="form-control"
+              />
+            </div>
+            <div className="col-6">
+              <label htmlFor="wd-available-until" className="form-label">
+                Available until
+              </label>
+              <input
+                id="wd-available-until"
+                type="datetime-local"
+                defaultValue={assignment.availableUntil}
+                className="form-control"
+              />
+            </div>
+          </div>
+        </div>
+        <br /><br /><br /><br />
+        <div className="d-flex justify-content-end">
+          <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+          <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-primary btn-danger">Save</Link>
+        </div>
       </div>
-      <div className="mb-3">
-        <label htmlFor="wd-due-date" className="form-label">
-          Due
-        </label>
-        <input
-          id="wd-due-date"
-          type="datetime-local"
-          value="2024-05-13T23:59"
-          className="form-control"
-        />
-      </div>
-
-
-      <div className="row">
-      <div className="col-6">
-        <label htmlFor="wd-available-from" className="form-label">
-          Available from
-        </label>
-        <input
-          id="wd-available-from"
-          type="datetime-local"
-          value="2024-05-06T00:00"
-          className="form-control"
-        />
-      </div>
-      <div className="col-6">
-        <label htmlFor="wd-available-until" className="form-label">
-          Available until
-        </label>
-        <input
-          id="wd-available-until"
-          type="datetime-local"
-          value="2024-05-20T23:59"
-          className="form-control"
-        />
-      </div>
-
-      </div>
-
-
-
-
     </div>
-    <br />     <br />     <br />     <br />
-    <div className="d-flex justify-content-end">
-
-<button className="btn btn-secondary me-2">Cancel</button>
-<button className="btn btn-primary btn-danger">Save</button>
-</div>
-      </div >
-    </div >
   );
 }
