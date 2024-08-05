@@ -1,32 +1,47 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { setAssignments, deleteAssignment } from "./reducer";
+import * as client from "./client";
+import { FaPlus, FaMagnifyingGlass, FaTrash } from "react-icons/fa6";
 import { BsGripVertical } from "react-icons/bs";
 import { PiNotePencilBold } from "react-icons/pi";
-import './styles.css';
 import { VscTriangleDown } from "react-icons/vsc";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer"; // Import deleteAssignment action
-import { FaPlus, FaMagnifyingGlass, FaTrash } from "react-icons/fa6";
-import ModuleControlButtons from "./ModuleControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import GreenCheckmark from "./GreenCheckmark";
+import './styles.css';
+import ModuleControlButtons from "./ModuleControlButtons";
 
 export default function Assignments() {
   const { cid } = useParams();
-  const assignments = useSelector((state: any) => state.assignments.assignments.filter((a: any) => a.course === cid)); // Fetch assignments from Redux state
+  const assignments = useSelector((state: any) => state.assignments.assignments.filter((a: any) => a.course === cid));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleAddAssignment = () => {
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [cid]);
+
+  const removeAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(cid as string, assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
+  const handleCreateAssignment = () => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/new`);
-  }
+  };
 
   const handleDeleteAssignment = (id: string) => {
-    //pulls dialog box to confirm delete
     if (window.confirm("Are you sure you want to delete this assignment?")) {
-      dispatch(deleteAssignment(id)); // Dispatch deleteAssignment action
+      removeAssignment(id);
     }
-  }
+  };
 
   return (
     <div>
@@ -52,9 +67,10 @@ export default function Assignments() {
               <FaPlus className="me-2" />
               Group
             </button>
-            <button id="wd-add-assignment"
+            <button
+              id="wd-add-assignment"
               className="btn btn-lg btn-danger w-100"
-              onClick={handleAddAssignment}
+              onClick={handleCreateAssignment}
             >
               <FaPlus className="me-2" />
               Assignment
@@ -99,7 +115,7 @@ export default function Assignments() {
                     <div className="float-end">
                       <FaTrash
                         className="text-danger me-2 mb-1"
-                        onClick={() => handleDeleteAssignment(assignment._id)} // Correctly dispatch deleteAssignment
+                        onClick={() => handleDeleteAssignment(assignment._id)}
                       />
                       <GreenCheckmark />
                       <IoEllipsisVertical className="fs-4" />
