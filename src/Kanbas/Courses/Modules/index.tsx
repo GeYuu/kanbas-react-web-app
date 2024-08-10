@@ -34,8 +34,6 @@ export default function Modules() {
     dispatch(updateModule(module));
   };
 
-
-
   return (
     <div id="wd-modules">
       <ModulesControls

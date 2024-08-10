@@ -12,6 +12,7 @@ export default function Signup() {
         try {
             const currentUser = await client.signup(user);
             dispatch(setCurrentUser(currentUser));
+            navigate("/Kanbas/Account/Profile");
         } catch (err: any) {
             setError(err.response.data.message);
         }

@@ -4,11 +4,23 @@ import React, { useState } from "react";
 export default function Dashboard(
   { courses, course, setCourse, addNewCourse,
     deleteCourse, updateCourse }: {
-    courses: any[]; course: any; setCourse: (course: any) => void;
-    addNewCourse: () => void; deleteCourse: (course: any) => void;
-    updateCourse: () => void; })
-   {
-  
+      courses: any[]; course: any; setCourse: (course: any) => void;
+
+      addNewCourse: () => void; deleteCourse: (course: any) => void;
+      updateCourse: () => void;
+    }) {
+
+const [error, setError] = useState<string | null>(null);
+
+const handleAddNewCourse = async () => {
+  try {
+    setError(null); // Clear any previous error messages
+    await addNewCourse();
+  } catch (err: any) {
+    setError(err.message || "An error occurred while adding the course");
+  }
+};
+
 
   return (
     <div id="wd-dashboard">
@@ -16,12 +28,15 @@ export default function Dashboard(
       <h5>New Course
         <button className="btn btn-primary float-end"
           id="wd-add-new-course-click"
-          onClick={addNewCourse} > Add </button>
+          onClick={handleAddNewCourse} > Add </button>
         <button className="btn btn-warning float-end me-2"
           onClick={updateCourse} id="wd-update-course-click">
           Update
         </button>
       </h5><br />
+
+      {error && <div className="alert alert-danger">{error}</div>} 
+      
       <input value={course.name} className="form-control mb-2"
         onChange={(e) => setCourse({ ...course, name: e.target.value })} />
       <textarea value={course.description} className="form-control"
@@ -36,14 +51,15 @@ export default function Dashboard(
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <Link to={`/Kanbas/Courses/${course._id}/Home`} className="text-decoration-none" >
                 <div className="card rounded-3 overflow-hidden">
-                  <img src={`/images/${course.name}.jpg`} className="card-img-top" alt={`Course ${course.name}`}
+                  <img src={`${course.imagePath}`}
+                    className="card-img-top" alt={`Course ${course.name}`}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null; // prevents looping
                       currentTarget.src = "/images/reactjs.jpg";
                     }
-                  
-                  }
-                  width={300} height={200}
+
+                    }
+                    width={300} height={200}
 
 
                   />
