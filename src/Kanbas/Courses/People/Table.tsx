@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUserCircle} from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
 import * as client from "./client";
 import PeopleDetails from "./Details";
@@ -88,7 +88,10 @@ export default function PeopleTable() {
           {users.map((user: any) => (
             <tr key={user._id}>
               <td className="wd-full-name text-nowrap">
-                <Link to={`/Kanbas/Courses/${cid}/People/${user._id}`}>
+              <FaUserCircle className="me-2" />
+                <Link to={`/Kanbas/Courses/${cid}/People/${user._id}`}
+                  className="wd-user-link text-decoration-none text-danger"
+                >
                   <span className="wd-first-name">{user.firstName}</span>{" "}
                   <span className="wd-last-name">{user.lastName}</span>
                 </Link>
